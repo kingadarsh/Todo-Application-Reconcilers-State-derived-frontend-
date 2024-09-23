@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SD Todo</title>
+</head>
+<body>
+    <!-- <div id="todosid"></div> -->
+    <h1 style="display: flex;justify-content: center;">Todo Application</h1>
+    <hr><br>
+    <div style="display: flex;justify-content: center;">
+        <input type="text" placeholder="Add Todo Here" style="width:500px;border-radius: 10px;border-width: 2px;display:flex;justify-content: center;">
+        <button onclick="addtodo()" style="width: 70px;">Add Todo</button>
+        <button onclick="deletelast()">Delete Last</button>
+        <button onclick="deletefirst()">Delete First</button>
+    </div>
+    <div id="todosid"></div>
+    <script>
+        let todos_array = [];//state 
+
+        function addtodo() {
+            const todoText = document.querySelector("input").value.trim();
+            //The ".trim()" function in JavaScript is used to remove whitespace from both ends of a string.
+            if (todoText === "") return;  // Prevent adding empty todos
+            todos_array.push({
+                title: todoText
+            });
+            render();
+            document.querySelector("input").value="";
+        }
+
+        function deletelast() {
+            if (todos_array.length > 0) {
+                todos_array.splice(todos_array.length - 1, 1);
+                render();
+            }
+        }
+
+        function deletefirst() {
+            if (todos_array.length > 0) {
+                todos_array.splice(0, 1);
+                render();
+            }
+        }
+
+        function DeteleTodoAt(index){
+            todos_array.splice(index,1);
+            render();
+        }
+//Component is made here
+        function createTodoComponent(todo,index) {
+            const div = document.createElement("div");
+            const h1 = document.createElement("h1");
+            const button = document.createElement("button");
+            button.innerHTML = "Delete";
+            button.setAttribute("onclick",`DeteleTodoAt(${index})`)
+            // Add event listener for deleting the specific todo
+            // button.addEventListener("click", () => {
+            //     todos_array = todos_array.filter(t => t !== todo);
+            //     render();
+            // });
+            
+            h1.innerHTML = todo.title;
+            div.append(h1);
+            div.append(button);
+            return div;
+        }
+//render function where state is merged in component 
+        function render() {
+            const todoContainer = document.querySelector("#todosid");
+            todoContainer.innerHTML = "";  // Clear previous todos
+           for(let i=0;i<todos_array.length;i++){
+            const element=createTodoComponent(todos_array[i],i);
+            document.querySelector("#todosid").appendChild(element);
+           }
+
+        }
+    </script>
+</body>
+</html>
